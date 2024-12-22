@@ -66,10 +66,10 @@ START-OF-SELECTION.
   INTO TABLE @it_ekko
   FROM ekko
   WHERE ebeln = @p_ebeln
-    AND bukrs = @p_bukrs
-    AND bsart = @p_bsart
-    AND bstyp = @p_bstyp
-    AND aedat = @p_aedat.
+    OR bukrs = @p_bukrs
+    OR bsart = @p_bsart
+    OR bstyp = @p_bstyp
+    OR aedat = @p_aedat.
   SELECT ebeln,ebelp,loekz,anfnr,aedat,txz01,brtwr,matnr,lgort,bukrs,matkl,
       bednr,werks,infnr,idnlf,peinh,menge,meins,bprme,bpumz,bpumn,umrez,
       umren,netpr,ktmng,netwr,ematn,agdat
