@@ -1,0 +1,152 @@
+TYPES: BEGIN OF ty_ekko,
+         ebeln TYPE ekko-ebeln,
+         spras TYPE ekko-spras,
+         bstyp TYPE ekko-bstyp,
+         statu TYPE ekko-statu,
+         bsakz TYPE ekko-bsakz,
+         loekz TYPE ekko-loekz,
+         bsart TYPE ekko-bsart,
+         aedat TYPE ekko-aedat,
+         ernam TYPE ekko-ernam,
+         pincr TYPE ekko-pincr,
+         lponr TYPE ekko-lponr,
+         lifnr TYPE ekko-lifnr,
+         bukrs TYPE ekko-bukrs,
+         zterm TYPE ekko-zterm,
+       END OF ty_ekko,
+
+       BEGIN OF ty_ekpo,
+         ebeln TYPE ekpo-ebeln,
+         ebelp TYPE ekpo-ebelp,
+         loekz TYPE ekpo-loekz,
+         anfnr TYPE ekpo-anfnr,
+         aedat TYPE ekpo-aedat,
+         txz01 TYPE ekpo-txz01,
+         brtwr TYPE ekpo-brtwr,
+         matnr TYPE ekpo-matnr,
+         lgort TYPE ekpo-lgort,
+         bukrs TYPE ekpo-bukrs,
+         matkl TYPE ekpo-matkl,
+         bednr TYPE ekpo-bednr,
+         werks TYPE ekpo-werks,
+         infnr TYPE ekpo-infnr,
+         idnlf TYPE ekpo-idnlf,
+         peinh TYPE ekpo-peinh,
+         menge TYPE ekpo-menge,
+         meins TYPE ekpo-meins,
+         bprme TYPE ekpo-bprme,
+         bpumz TYPE ekpo-bpumz,
+         bpumn TYPE ekpo-bpumn,
+         umrez TYPE ekpo-umrez,
+         umren TYPE ekpo-umren,
+         netpr TYPE ekpo-netpr,
+         ktmng TYPE ekpo-ktmng,
+         netwr TYPE ekpo-netwr,
+         ematn TYPE ekpo-ematn,
+         agdat TYPE ekpo-agdat,
+       END OF ty_ekpo.
+DATA: it_ekko     TYPE TABLE OF ty_ekko,
+      it_ekpo     TYPE TABLE OF ty_ekpo,
+      it_final    TYPE TABLE OF zty_ekko_ekpo,
+      wa_final    TYPE zty_ekko_ekpo,
+      it_fieldcat TYPE slis_t_fieldcat_alv,
+      wa_fieldcat TYPE slis_fieldcat_alv.
+
+SELECTION-SCREEN BEGIN OF BLOCK b1 WITH FRAME TITLE TEXT-001.
+  PARAMETERS: p_ebeln TYPE ekko-ebeln,
+              p_bukrs TYPE ekko-bukrs,
+              p_bsart TYPE ekko-bsart,
+              p_bstyp TYPE ekko-bstyp,
+              p_matkl TYPE ekpo-matkl,
+              p_aedat TYPE ekko-aedat.
+SELECTION-SCREEN END OF BLOCK b1.
+
+START-OF-SELECTION.
+  SELECT ebeln,spras,bstyp,statu,bsakz,loekz,bsart,aedat,ernam,pincr,lponr,lifnr,bukrs,zterm
+  INTO TABLE @it_ekko
+  FROM ekko
+  WHERE ebeln = @p_ebeln
+    AND bukrs = @p_bukrs
+    AND bsart = @p_bsart
+    AND bstyp = @p_bstyp
+    AND aedat = @p_aedat.
+  SELECT ebeln,ebelp,loekz,anfnr,aedat,txz01,brtwr,matnr,lgort,bukrs,matkl,
+      bednr,werks,infnr,idnlf,peinh,menge,meins,bprme,bpumz,bpumn,umrez,
+      umren,netpr,ktmng,netwr,ematn,agdat
+ INTO TABLE @it_ekpo
+ FROM ekpo
+ WHERE ebeln IN ( SELECT ebeln FROM ekko WHERE ebeln = @p_ebeln ).
+
+  LOOP AT it_ekko INTO DATA(wa_ekko).
+    LOOP AT it_ekpo INTO DATA(wa_ekpo) WHERE ebeln = wa_ekko-ebeln.
+      wa_final-ebeln = wa_ekpo-ebeln.
+      wa_final-ebelp = wa_ekpo-ebelp.
+      wa_final-loekz = wa_ekpo-loekz.
+      wa_final-anfnr = wa_ekpo-anfnr.
+      wa_final-aedat = wa_ekpo-aedat.
+      wa_final-txz01 = wa_ekpo-txz01.
+      wa_final-brtwr = wa_ekpo-brtwr.
+      wa_final-matnr = wa_ekpo-matnr.
+      wa_final-lgort = wa_ekpo-lgort.
+      wa_final-bukrs = wa_ekpo-bukrs.
+      wa_final-matkl = wa_ekpo-matkl.
+      wa_final-bednr = wa_ekpo-bednr.
+      wa_final-werks = wa_ekpo-werks.
+      wa_final-infnr = wa_ekpo-infnr.
+      wa_final-idnlf = wa_ekpo-idnlf.
+      wa_final-peinh = wa_ekpo-peinh.
+      wa_final-menge = wa_ekpo-menge.
+      wa_final-meins = wa_ekpo-meins.
+      wa_final-bprme = wa_ekpo-bprme.
+      wa_final-bpumz = wa_ekpo-bpumz.
+      wa_final-bpumn = wa_ekpo-bpumn.
+      wa_final-umrez = wa_ekpo-umrez.
+      wa_final-umren = wa_ekpo-umren.
+      wa_final-netpr = wa_ekpo-netpr.
+      wa_final-ktmng = wa_ekpo-ktmng.
+      wa_final-netwr = wa_ekpo-netwr.
+      wa_final-ematn = wa_ekpo-ematn.
+      wa_final-ebeln = wa_ekko-ebeln.
+      wa_final-spras = wa_ekko-spras.
+      wa_final-bstyp = wa_ekko-bstyp.
+      wa_final-statu = wa_ekko-statu.
+      wa_final-bsakz = wa_ekko-bsakz.
+      wa_final-loekz = wa_ekko-loekz.
+      wa_final-bsart = wa_ekko-bsart.
+      wa_final-aedat = wa_ekko-aedat.
+      wa_final-ernam = wa_ekko-ernam.
+      wa_final-pincr = wa_ekko-pincr.
+      wa_final-lponr = wa_ekko-lponr.
+      wa_final-lifnr = wa_ekko-lifnr.
+      wa_final-bukrs = wa_ekko-bukrs.
+      wa_final-zterm = wa_ekko-zterm.
+      APPEND wa_final TO it_final.
+      CLEAR : wa_final.
+    ENDLOOP.
+  ENDLOOP.
+
+END-OF-SELECTION.
+
+  CALL FUNCTION 'REUSE_ALV_FIELDCATALOG_MERGE'
+    EXPORTING
+      i_structure_name       = 'ZTY_EKKO_EKPO'
+    CHANGING
+      ct_fieldcat            = it_fieldcat
+    EXCEPTIONS
+      inconsistent_interface = 1
+      program_error          = 2
+      OTHERS                 = 3.
+  IF sy-subrc <> 0.
+  ENDIF.
+
+  CALL FUNCTION 'REUSE_ALV_GRID_DISPLAY'
+    EXPORTING
+      it_fieldcat        = it_fieldcat
+    TABLES
+      t_outtab           = it_final
+    EXCEPTIONS
+      program_error      = 1
+      OTHERS             = 2.
+  IF sy-subrc <> 0.
+* Implement suitable error handling here
+  ENDIF.
